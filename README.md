@@ -1,34 +1,15 @@
 # Babies360
-
+Babies360 is a service that give parents the possibility to ask for a variety of services, such as babysitting, party organization and pedagogical consultation. The platform will collect all the needed details and the game is done!
 
 ## Members:
 * Alberto, Papiri, 10566115 
 * Niloofar, Sasannia, 10888547
   
 ## Choreographed process
-Short description of the choreographed process
-
-place here an image of the BPMN Choreography diagram
-
+This BPMN Choreography diagram represents a service coordination between Parents and the Babies360 company. At the beginning Parents making an initial service request to Babies360. The company then checks for availability; if the availability doesn't match the parent’s needs, the process will end. Once there's a match, Babies360 requests additional information from the Parents. After obtaining the needed details, Babies360 allocates the appropriate resources, like a babysitter, party organizer, or pedagogical consultant(they can be parallel). Following the service delivery, Babies360 manages the payment process and issues a payment notification to the Parents, concluding the transaction.
 
 ## Collaboration Diagram
 
-place here an image of the BPMN Collaboration diagram, where the only white box is for the Babies360, the others will be black-boxes
-
-## Petri Net
-
-place here the image of the PetriNet corresponding to the Baby360 executable model
-
-# Third party services
-* baby sitters
-* party organizer
-* pedagogical consultant
-* ... (add if you need more)
-
-
-## Executable process
-
-place here an image of the BPMN diagram corresponding to the executable model of the Baby360 process
 
 
 
