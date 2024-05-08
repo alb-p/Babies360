@@ -12,5 +12,5 @@ This BPMN Choreography diagram represents a service coordination between Parents
 ## Collaboration Diagram
 ![collaboration diagram](processes/collaboration.png?raw=true)
 
-
-
+## PetriNet
+![PetriNet](processes/PetriNet.png?raw=true)
