@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "40437fe3-9dbc-42bb-89db-10331f3fc28c",
+		"name": "Babysitter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33265345"
+	},
+	"item": [
+		{
+			"name": "serviceDone",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "serviceAcceptance",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9091/serviceAcceptance/7892",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9091",
+					"path": [
+						"serviceAcceptance",
+						"7892"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "serviceRequest",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"date\": \"2024-07-19\",\n  \"hours\": 4,\n  \"address\": \"via Roma, 43, Milano\",\n  \"additionalDetails\": \"Please be on time and bring toys for a 5-year-old.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9091/serviceRequest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9091",
+					"path": [
+						"serviceRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acceptPayment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 3600,\n  \"currency\": \"eur\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9091/acceptPayment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9091",
+					"path": [
+						"acceptPayment"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

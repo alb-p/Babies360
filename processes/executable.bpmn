@@ -1,0 +1,1133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0c1w7vd" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
+  <bpmn:process id="Babies360_v1" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_07zmsoh" sourceRef="Activity_1ismsxe" targetRef="Gateway_1kc0wh7" />
+    <bpmn:exclusiveGateway id="Gateway_1kc0wh7" name="is it feasible?" default="Flow_1cockl4">
+      <bpmn:incoming>Flow_07zmsoh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1afsppr</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1cockl4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1afsppr" name="yes" sourceRef="Gateway_1kc0wh7" targetRef="feasibility_1ejnw1b">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=feasibility = 1</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1cockl4" name="no" sourceRef="Gateway_1kc0wh7" targetRef="Activity_0uk6dke" />
+    <bpmn:startEvent id="Event_1g0i9b6">
+      <bpmn:outgoing>Flow_1dnz7bd</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1dnz7bd" sourceRef="Event_1g0i9b6" targetRef="request_0q7gzql" />
+    <bpmn:userTask id="request_0q7gzql" name="service request">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="service_request_form" />
+        <zeebe:assignmentDefinition assignee="parents" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1dnz7bd</bpmn:incoming>
+      <bpmn:outgoing>Flow_09xj7v2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:inclusiveGateway id="Gateway_1lka5am">
+      <bpmn:incoming>Flow_0sq8gxg</bpmn:incoming>
+      <bpmn:outgoing>Flow_17i3q85</bpmn:outgoing>
+      <bpmn:outgoing>Flow_19dm0j7</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1rqhqw0</bpmn:outgoing>
+    </bpmn:inclusiveGateway>
+    <bpmn:userTask id="confirmation_0mn7zfz" name="parents service done confirmation">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Finish_service_notice_babysitter" />
+        <zeebe:assignmentDefinition assignee="parents" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1drnkf6</bpmn:incoming>
+      <bpmn:outgoing>Flow_14wjjom</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_17i3q85" sourceRef="Gateway_1lka5am" targetRef="Activity_0sny1nc">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=some item in checklist_service satisfies item = "1"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="feasibility_1ejnw1b" name="Inform parents about feasibility">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Feasibility" />
+        <zeebe:assignmentDefinition assignee="parents" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1afsppr</bpmn:incoming>
+      <bpmn:outgoing>Flow_0sq8gxg</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_152f78k">
+      <bpmn:incoming>Flow_0ybum8p</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0ybum8p" sourceRef="Activity_0uk6dke" targetRef="Event_152f78k" />
+    <bpmn:scriptTask id="Activity_1ismsxe" name="check feasibilty">
+      <bpmn:extensionElements>
+        <zeebe:script expression="=if count(checklist_service) &#62; 0 and service_hours &#62; 0 then 1 else 0&#10;" resultVariable="feasibility" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_09xj7v2</bpmn:incoming>
+      <bpmn:outgoing>Flow_07zmsoh</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:callActivity id="Activity_1srz6ze" name="payment and feedback">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="payment_feedback" propagateAllChildVariables="false" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=babysitting_fee" target="service_fee" />
+          <zeebe:output source="=provider_fee" target="babysitter_fee" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_144hnrn</bpmn:incoming>
+      <bpmn:outgoing>Flow_0t2jw03</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:userTask id="Activity_0uk6dke" name="Service request rejection">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="not_available_form" />
+        <zeebe:assignmentDefinition assignee="parents" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1cockl4</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ybum8p</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_1dojlxp" name="service concluded">
+      <bpmn:incoming>Flow_0llyaad</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0t2jw03" sourceRef="Activity_1srz6ze" targetRef="Activity_0xsxrm5" />
+    <bpmn:callActivity id="Activity_09e07sf" name="payment and feedback">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="payment_feedback" propagateAllChildVariables="false" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=party_fee" target="service_fee" />
+          <zeebe:output source="=provider_fee" target="party_organizer_fee" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_16h8lwt</bpmn:incoming>
+      <bpmn:outgoing>Flow_1001tam</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="Event_12cepm8" name="service concluded">
+      <bpmn:incoming>Flow_0wxk40i</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1001tam" sourceRef="Activity_09e07sf" targetRef="Activity_10u7818" />
+    <bpmn:callActivity id="Activity_0hm9819" name="payment and feedback">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="payment_feedback" propagateAllChildVariables="false" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=consultancy_fee" target="service_fee" />
+          <zeebe:output source="=provider_fee" target="pedconsultant_fee" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1kvpfzx</bpmn:incoming>
+      <bpmn:outgoing>Flow_1dtqhhh</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="Event_0ukessa" name="service concluded">
+      <bpmn:incoming>Flow_1c6rkms</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_1iqikmm" name="check babysitter about job acceptance" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="=&#34;http://192.168.1.198:9091/serviceAcceptance/&#34;+id_at_babysitter" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={&#10;  babysitting_acceptance: response.body.message&#10;}" />
+          <zeebe:header key="errorExpression" value="=if error.code = &#34;404&#34; then&#10;	bpmnError(&#34;404&#34;, &#34;Got a 404&#34;)&#10;else&#10;	null" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0x2408f</bpmn:incoming>
+      <bpmn:incoming>Flow_1qyj50l</bpmn:incoming>
+      <bpmn:outgoing>Flow_058oefe</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:intermediateCatchEvent id="Event_1v69nkc" name="1 day after service">
+      <bpmn:documentation>Type: Date
+Date: date and time(datetime_form + duration("P1D"))</bpmn:documentation>
+      <bpmn:incoming>Flow_0hfpfgh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1xdim6s</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1ac13gp">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT4S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_1drnkf6" sourceRef="Gateway_1vhkdfw" targetRef="confirmation_0mn7zfz" />
+    <bpmn:scriptTask id="Activity_0a726su" name="calculate service fee">
+      <bpmn:extensionElements>
+        <zeebe:script expression="=service_hours * 20" resultVariable="babysitting_fee" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_01jvw58</bpmn:incoming>
+      <bpmn:outgoing>Flow_144hnrn</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_144hnrn" sourceRef="Activity_0a726su" targetRef="Activity_1srz6ze" />
+    <bpmn:intermediateCatchEvent id="Event_0oszh1l" name="1 day after service">
+      <bpmn:documentation>Type: Date
+Date: date and time(datetime_form + duration("P1D"))</bpmn:documentation>
+      <bpmn:incoming>Flow_0owtmjf</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bw5ecs</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1dt8awl">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT4S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:userTask id="Activity_0drtowh" name="parents service done confirmation">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Finish_service_notice_party_organizer" />
+        <zeebe:assignmentDefinition assignee="parents" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0zk1pbj</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rm74xy</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:scriptTask id="Activity_1eotex4" name="calculate service fee">
+      <bpmn:extensionElements>
+        <zeebe:script expression="=service_hours *  30" resultVariable="party_fee" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0dgxpay</bpmn:incoming>
+      <bpmn:outgoing>Flow_16h8lwt</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_16h8lwt" sourceRef="Activity_1eotex4" targetRef="Activity_09e07sf" />
+    <bpmn:parallelGateway id="Gateway_1vhkdfw">
+      <bpmn:incoming>Flow_1xdim6s</bpmn:incoming>
+      <bpmn:outgoing>Flow_1drnkf6</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0f80zgq</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_1xdim6s" sourceRef="Event_1v69nkc" targetRef="Gateway_1vhkdfw" />
+    <bpmn:sequenceFlow id="Flow_0f80zgq" sourceRef="Gateway_1vhkdfw" targetRef="Activity_0mow0q8" />
+    <bpmn:sequenceFlow id="Flow_14wjjom" sourceRef="confirmation_0mn7zfz" targetRef="Gateway_1iqap7y" />
+    <bpmn:parallelGateway id="Gateway_1iqap7y">
+      <bpmn:incoming>Flow_14wjjom</bpmn:incoming>
+      <bpmn:incoming>Flow_1huq6hw</bpmn:incoming>
+      <bpmn:outgoing>Flow_01jvw58</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_01jvw58" sourceRef="Gateway_1iqap7y" targetRef="Activity_0a726su" />
+    <bpmn:sequenceFlow id="Flow_1huq6hw" sourceRef="Activity_0mow0q8" targetRef="Gateway_1iqap7y" />
+    <bpmn:serviceTask id="Activity_0mow0q8" name="babysitter service done confirmation" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="=&#34;http://192.168.1.198:9091/serviceDone/&#34;+id_at_babysitter" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={&#10;  service_done: response.body.message&#10;}" />
+          <zeebe:header key="errorExpression" value="=if error.code = &#34;404&#34; then&#10;	bpmnError(&#34;404&#34;, &#34;Got a 404&#34;)&#10;else&#10;	null" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0f80zgq</bpmn:incoming>
+      <bpmn:outgoing>Flow_1huq6hw</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_0f0bora" default="Flow_0ookt66">
+      <bpmn:incoming>Flow_058oefe</bpmn:incoming>
+      <bpmn:outgoing>Flow_0hfpfgh</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0ookt66</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0q5s82l</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_058oefe" sourceRef="Activity_1iqikmm" targetRef="Gateway_0f0bora" />
+    <bpmn:sequenceFlow id="Flow_0hfpfgh" sourceRef="Gateway_0f0bora" targetRef="Event_1v69nkc">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=babysitting_acceptance = "accepted"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0ookt66" sourceRef="Gateway_0f0bora" targetRef="Event_06s9r9h" />
+    <bpmn:intermediateCatchEvent id="Event_06s9r9h" name="12 hrs">
+      <bpmn:incoming>Flow_0ookt66</bpmn:incoming>
+      <bpmn:outgoing>Flow_0x2408f</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1hrjlza">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT12H</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_0x2408f" sourceRef="Event_06s9r9h" targetRef="Activity_1iqikmm" />
+    <bpmn:sequenceFlow id="Flow_0sq8gxg" sourceRef="feasibility_1ejnw1b" targetRef="Gateway_1lka5am" />
+    <bpmn:sequenceFlow id="Flow_09xj7v2" sourceRef="request_0q7gzql" targetRef="Activity_1ismsxe" />
+    <bpmn:subProcess id="Activity_0eeqdxu">
+      <bpmn:incoming>Flow_1z0vblj</bpmn:incoming>
+      <bpmn:outgoing>Flow_0owtmjf</bpmn:outgoing>
+      <bpmn:startEvent id="Event_0sccz41">
+        <bpmn:outgoing>Flow_0r9r5js</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:endEvent id="Event_1ss76kn">
+        <bpmn:incoming>Flow_1wmygez</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:userTask id="Activity_1cuhvym" name="ask for party details">
+        <bpmn:extensionElements>
+          <zeebe:formDefinition formId="Party_deatils_form" />
+          <zeebe:assignmentDefinition assignee="parents" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0w9akp5</bpmn:incoming>
+        <bpmn:outgoing>Flow_0t4v4fj</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:serviceTask id="Activity_1n23h9u" name="send complementary service details" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+          <zeebe:ioMapping>
+            <zeebe:input source="noAuth" target="authentication.type" />
+            <zeebe:input source="POST" target="method" />
+            <zeebe:input source="=&#34;http://192.168.1.198:9092/partyDetails/&#34;+id_at_partyorg" target="url" />
+            <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+            <zeebe:input source="20" target="readTimeoutInSeconds" />
+            <zeebe:input source="0" target="writeTimeoutInSeconds" />
+            <zeebe:input source="={&#10;  &#34;partyType&#34;: party_type,&#10;  &#34;theme&#34;: theme,&#10;  &#34;venue&#34;: venue,&#10;  &#34;numberOfGuests&#34;: number_of_guests,&#10;  &#34;foodAndBevarages&#34;: food_and_bevarages,&#10;  &#34;equipment&#34;: equipment&#10;}" target="body" />
+          </zeebe:ioMapping>
+          <zeebe:taskHeaders>
+            <zeebe:header key="retryBackoff" value="PT0S" />
+          </zeebe:taskHeaders>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0t4v4fj</bpmn:incoming>
+        <bpmn:outgoing>Flow_1wmygez</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_1wmygez" sourceRef="Activity_1n23h9u" targetRef="Event_1ss76kn" />
+      <bpmn:sequenceFlow id="Flow_0t4v4fj" sourceRef="Activity_1cuhvym" targetRef="Activity_1n23h9u" />
+      <bpmn:serviceTask id="Activity_164thiu" name="check party org. about job acceptance" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+          <zeebe:ioMapping>
+            <zeebe:input source="noAuth" target="authentication.type" />
+            <zeebe:input source="GET" target="method" />
+            <zeebe:input source="=&#34;http://192.168.1.198:9092/serviceAcceptance/&#34;+id_at_partyorg" target="url" />
+            <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+            <zeebe:input source="20" target="readTimeoutInSeconds" />
+          </zeebe:ioMapping>
+          <zeebe:taskHeaders>
+            <zeebe:header key="resultExpression" value="={&#10;  party_acceptance: response.body.message&#10;}" />
+            <zeebe:header key="retryBackoff" value="PT0S" />
+          </zeebe:taskHeaders>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0r9r5js</bpmn:incoming>
+        <bpmn:incoming>Flow_0fx85do</bpmn:incoming>
+        <bpmn:outgoing>Flow_19823yf</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_19823yf" sourceRef="Activity_164thiu" targetRef="Gateway_1uvslef" />
+      <bpmn:sequenceFlow id="Flow_0r9r5js" sourceRef="Event_0sccz41" targetRef="Activity_164thiu" />
+      <bpmn:exclusiveGateway id="Gateway_1uvslef" default="Flow_1fsagq8">
+        <bpmn:incoming>Flow_19823yf</bpmn:incoming>
+        <bpmn:outgoing>Flow_1fsagq8</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0w9akp5</bpmn:outgoing>
+        <bpmn:outgoing>Flow_1g2vgyd</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:intermediateCatchEvent id="Event_1if5he2" name="12 hrs">
+        <bpmn:incoming>Flow_1fsagq8</bpmn:incoming>
+        <bpmn:outgoing>Flow_0fx85do</bpmn:outgoing>
+        <bpmn:timerEventDefinition id="TimerEventDefinition_05gblos">
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT12H</bpmn:timeDuration>
+        </bpmn:timerEventDefinition>
+      </bpmn:intermediateCatchEvent>
+      <bpmn:sequenceFlow id="Flow_1fsagq8" sourceRef="Gateway_1uvslef" targetRef="Event_1if5he2" />
+      <bpmn:sequenceFlow id="Flow_0w9akp5" sourceRef="Gateway_1uvslef" targetRef="Activity_1cuhvym">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=party_acceptance = "accepted"</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_0fx85do" sourceRef="Event_1if5he2" targetRef="Activity_164thiu" />
+      <bpmn:userTask id="Activity_09eidzg" name="Service request rejection">
+        <bpmn:extensionElements>
+          <zeebe:assignmentDefinition assignee="parents" />
+          <zeebe:formDefinition formId="not_available_form" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_1g2vgyd</bpmn:incoming>
+        <bpmn:outgoing>Flow_0sq1ybt</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:endEvent id="Event_03q8ujt">
+        <bpmn:incoming>Flow_0sq1ybt</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0sq1ybt" sourceRef="Activity_09eidzg" targetRef="Event_03q8ujt" />
+      <bpmn:sequenceFlow id="Flow_1g2vgyd" sourceRef="Gateway_1uvslef" targetRef="Activity_09eidzg">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=babysitting_acceptance = "rejected"</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_19dm0j7" sourceRef="Gateway_1lka5am" targetRef="Activity_187e8ze">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=some item in checklist_service satisfies item = "2"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0owtmjf" sourceRef="Activity_0eeqdxu" targetRef="Event_0oszh1l" />
+    <bpmn:parallelGateway id="Gateway_0h91t5u">
+      <bpmn:incoming>Flow_0bw5ecs</bpmn:incoming>
+      <bpmn:outgoing>Flow_0zk1pbj</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1kifvmp</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_0bw5ecs" sourceRef="Event_0oszh1l" targetRef="Gateway_0h91t5u" />
+    <bpmn:sequenceFlow id="Flow_0zk1pbj" sourceRef="Gateway_0h91t5u" targetRef="Activity_0drtowh" />
+    <bpmn:serviceTask id="Activity_1he2hx0" name="party org service done confirmation" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="=&#34;http://192.168.1.198:9091/serviceDone/&#34;+id_at_partyorg" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={&#10;  service_done: response.body.message&#10;}" />
+          <zeebe:header key="errorExpression" value="=if error.code = &#34;404&#34; then&#10;	bpmnError(&#34;404&#34;, &#34;Got a 404&#34;)&#10;else&#10;	null" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1kifvmp</bpmn:incoming>
+      <bpmn:outgoing>Flow_0iv9mt2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1kifvmp" sourceRef="Gateway_0h91t5u" targetRef="Activity_1he2hx0" />
+    <bpmn:parallelGateway id="Gateway_0exd21l">
+      <bpmn:incoming>Flow_0rm74xy</bpmn:incoming>
+      <bpmn:incoming>Flow_0iv9mt2</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dgxpay</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_0rm74xy" sourceRef="Activity_0drtowh" targetRef="Gateway_0exd21l" />
+    <bpmn:sequenceFlow id="Flow_0iv9mt2" sourceRef="Activity_1he2hx0" targetRef="Gateway_0exd21l" />
+    <bpmn:sequenceFlow id="Flow_0dgxpay" sourceRef="Gateway_0exd21l" targetRef="Activity_1eotex4" />
+    <bpmn:serviceTask id="Activity_1x3e6d9" name="check ped consultant about job acceptance" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="=&#34;http://192.168.1.198:9093/serviceAcceptance/&#34;+id_at_pedconsultant" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={&#10;  ped_acceptance: response.body.message&#10;}" />
+          <zeebe:header key="errorExpression" value="=if error.code = &#34;404&#34; then&#10;	bpmnError(&#34;404&#34;, &#34;Got a 404&#34;)&#10;else&#10;	null" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0vn160v</bpmn:incoming>
+      <bpmn:incoming>Flow_0ctiq1c</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ywfahv</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:intermediateCatchEvent id="Event_1lv0n7o" name="1 day after service">
+      <bpmn:documentation>Type: Date
+Date: date and time(datetime_form + duration("P1D"))</bpmn:documentation>
+      <bpmn:incoming>Flow_004hiqr</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kvpfzx</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_12q1c8d">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT4S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:exclusiveGateway id="Gateway_1xbi9kc" default="Flow_0hyrbbu">
+      <bpmn:incoming>Flow_0ywfahv</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ps3kqv</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0hyrbbu</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1i3z0db</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateCatchEvent id="Event_1y983ad" name="12 hrs">
+      <bpmn:incoming>Flow_0hyrbbu</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vn160v</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1jiljjq">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT12H</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_0vn160v" sourceRef="Event_1y983ad" targetRef="Activity_1x3e6d9" />
+    <bpmn:sequenceFlow id="Flow_0ywfahv" sourceRef="Activity_1x3e6d9" targetRef="Gateway_1xbi9kc" />
+    <bpmn:sequenceFlow id="Flow_0ps3kqv" sourceRef="Gateway_1xbi9kc" targetRef="Event_0zgoqfm">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ped_acceptance = "accepted"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0hyrbbu" sourceRef="Gateway_1xbi9kc" targetRef="Event_1y983ad" />
+    <bpmn:sequenceFlow id="Flow_1rqhqw0" sourceRef="Gateway_1lka5am" targetRef="Activity_15ag4vq">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=some item in checklist_service satisfies item = "3"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1kvpfzx" sourceRef="Event_1lv0n7o" targetRef="Activity_0hm9819" />
+    <bpmn:sequenceFlow id="Flow_06njtdh" sourceRef="Event_0zgoqfm" targetRef="Activity_0fsi77z" />
+    <bpmn:userTask id="Activity_11b12y2" name="reminder pedagogical consult">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="consult_remainder_form" />
+        <zeebe:assignmentDefinition assignee="parents" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1yrvkaa</bpmn:incoming>
+      <bpmn:outgoing>Flow_004hiqr</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:scriptTask id="Activity_0fsi77z" name="calculate service fee">
+      <bpmn:extensionElements>
+        <zeebe:script expression="=service_hours * 40" resultVariable="consultancy_fee" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_06njtdh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1yrvkaa</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_1yrvkaa" sourceRef="Activity_0fsi77z" targetRef="Activity_11b12y2" />
+    <bpmn:sequenceFlow id="Flow_004hiqr" sourceRef="Activity_11b12y2" targetRef="Event_1lv0n7o" />
+    <bpmn:intermediateCatchEvent id="Event_0zgoqfm" name="1 day before service">
+      <bpmn:documentation>Type: Date
+Date: date and time(datetime_form - duration("P1D"))</bpmn:documentation>
+      <bpmn:incoming>Flow_0ps3kqv</bpmn:incoming>
+      <bpmn:outgoing>Flow_06njtdh</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1x9lftz">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT4S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:serviceTask id="Activity_0sny1nc" name="babysitter service request" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="http://192.168.1.198:9091/serviceRequest" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="0" target="writeTimeoutInSeconds" />
+          <zeebe:input source="={&#10;  &#34;date&#34;: string(datetime_form),&#10;  &#34;hours&#34;: service_hours,&#10;  &#34;address&#34;: address_form,&#10;  &#34;additionalDetails&#34;: details_form&#10;}" target="body" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={&#10;  id_at_babysitter: response.body.id&#10;}" />
+          <zeebe:header key="errorExpression" value="=if error.code = &#34;404&#34; then&#10;	bpmnError(&#34;404&#34;, &#34;Got a 404&#34;)&#10;else&#10;	null" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_17i3q85</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qyj50l</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1qyj50l" sourceRef="Activity_0sny1nc" targetRef="Activity_1iqikmm" />
+    <bpmn:serviceTask id="Activity_187e8ze" name="party organizer service request" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="http://192.168.1.198:9092/serviceRequest" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="0" target="writeTimeoutInSeconds" />
+          <zeebe:input source="={&#10;  &#34;date&#34;: string(datetime_form),&#10;  &#34;hours&#34;: service_hours,&#10;  &#34;address&#34;: address_form,&#10;  &#34;additionalDetails&#34;: details_form&#10;}" target="body" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={&#10;  id_at_partyorg: response.body.id&#10;}" />
+          <zeebe:header key="errorExpression" value="=if error.code = &#34;404&#34; then&#10;	bpmnError(&#34;404&#34;, &#34;Got a 404&#34;)&#10;else&#10;	null" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_19dm0j7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1z0vblj</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_15ag4vq" name="pedagogical consultant service request" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="http://192.168.1.198:9093/serviceRequest" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="0" target="writeTimeoutInSeconds" />
+          <zeebe:input source="={&#10;  &#34;date&#34;: string(datetime_form),&#10;  &#34;hours&#34;: service_hours,&#10;  &#34;address&#34;: address_form,&#10;  &#34;additionalDetails&#34;: details_form&#10;}" target="body" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={&#10;  id_at_pedconsultant: response.body.id&#10;}" />
+          <zeebe:header key="errorExpression" value="=if error.code = &#34;404&#34; then&#10;	bpmnError(&#34;404&#34;, &#34;Got a 404&#34;)&#10;else&#10;	null" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1rqhqw0</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ctiq1c</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0ctiq1c" sourceRef="Activity_15ag4vq" targetRef="Activity_1x3e6d9" />
+    <bpmn:sequenceFlow id="Flow_1z0vblj" sourceRef="Activity_187e8ze" targetRef="Activity_0eeqdxu" />
+    <bpmn:serviceTask id="Activity_0xsxrm5" name="payment to the service providers" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="http://192.168.1.198:9091/acceptPayment" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="0" target="writeTimeoutInSeconds" />
+          <zeebe:input source="={&#34;amount&#34;: babysitter_fee*100, &#34;currency&#34;: &#34;eur&#34;}" target="body" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultVariable" value="baby_payment_response" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0t2jw03</bpmn:incoming>
+      <bpmn:outgoing>Flow_0llyaad</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_1c1u7qo">
+        <bpmn:targetRef>DataObjectReference_0v0v7xe</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:serviceTask>
+    <bpmn:dataObjectReference id="DataObjectReference_0v0v7xe" name="provider receipt" dataObjectRef="DataObject_12pc1ds" />
+    <bpmn:dataObject id="DataObject_12pc1ds" />
+    <bpmn:sequenceFlow id="Flow_0llyaad" sourceRef="Activity_0xsxrm5" targetRef="Event_1dojlxp" />
+    <bpmn:serviceTask id="Activity_10u7818" name="payment to the service providers" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="http://192.168.1.198:9092/acceptPayment" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="0" target="writeTimeoutInSeconds" />
+          <zeebe:input source="={&#34;amount&#34;: party_organizer_fee*100, &#34;currency&#34;: &#34;eur&#34;}" target="body" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1001tam</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wxk40i</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_0qe7ykv">
+        <bpmn:targetRef>DataObjectReference_1hwecd1</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:serviceTask>
+    <bpmn:dataObjectReference id="DataObjectReference_1hwecd1" name="provider receipt" dataObjectRef="DataObject_0z3u4bg" />
+    <bpmn:dataObject id="DataObject_0z3u4bg" />
+    <bpmn:sequenceFlow id="Flow_0wxk40i" sourceRef="Activity_10u7818" targetRef="Event_12cepm8" />
+    <bpmn:serviceTask id="Activity_096c0sf" name="payment to the service providers" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="http://192.168.1.198:9093/acceptPayment" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="0" target="writeTimeoutInSeconds" />
+          <zeebe:input source="={&#34;amount&#34;: pedconsultant_fee*100, &#34;currency&#34;: &#34;eur&#34;}" target="body" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1dtqhhh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1c6rkms</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_0mw4xr2">
+        <bpmn:targetRef>DataObjectReference_0q6arzp</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:serviceTask>
+    <bpmn:dataObjectReference id="DataObjectReference_0q6arzp" name="provider receipt" dataObjectRef="DataObject_162yim2" />
+    <bpmn:dataObject id="DataObject_162yim2" />
+    <bpmn:sequenceFlow id="Flow_1dtqhhh" sourceRef="Activity_0hm9819" targetRef="Activity_096c0sf" />
+    <bpmn:sequenceFlow id="Flow_1c6rkms" sourceRef="Activity_096c0sf" targetRef="Event_0ukessa" />
+    <bpmn:userTask id="Activity_1dda2yz" name="Service request rejection">
+      <bpmn:extensionElements>
+        <zeebe:assignmentDefinition assignee="parents" />
+        <zeebe:formDefinition formId="not_available_form" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0q5s82l</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wszehh</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_15q6iia">
+      <bpmn:incoming>Flow_0wszehh</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0wszehh" sourceRef="Activity_1dda2yz" targetRef="Event_15q6iia" />
+    <bpmn:sequenceFlow id="Flow_0q5s82l" sourceRef="Gateway_0f0bora" targetRef="Activity_1dda2yz">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=babysitting_acceptance = "rejected"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="Activity_01v0851" name="Service request rejection">
+      <bpmn:extensionElements>
+        <zeebe:assignmentDefinition assignee="parents" />
+        <zeebe:formDefinition formId="not_available_form" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1i3z0db</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hvfriu</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_0a38sep">
+      <bpmn:incoming>Flow_1hvfriu</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1hvfriu" sourceRef="Activity_01v0851" targetRef="Event_0a38sep" />
+    <bpmn:sequenceFlow id="Flow_1i3z0db" sourceRef="Gateway_1xbi9kc" targetRef="Activity_01v0851">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=babysitting_acceptance = "rejected"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmn:message id="Message_31qomnn" name="Message_31qomnn" />
+  <bpmn:message id="Message_0737m22" name="Message_0737m22" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Babies360_v1">
+      <bpmndi:BPMNShape id="Gateway_1kc0wh7_di" bpmnElement="Gateway_1kc0wh7" isMarkerVisible="true">
+        <dc:Bounds x="565" y="492" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="558" y="462" width="64" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1g0i9b6_di" bpmnElement="Event_1g0i9b6">
+        <dc:Bounds x="152" y="499" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pg7mex_di" bpmnElement="request_0q7gzql">
+        <dc:Bounds x="240" y="477" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_19klbmq_di" bpmnElement="Gateway_1lka5am">
+        <dc:Bounds x="1015" y="492" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_00pc8u4" bpmnElement="confirmation_0mn7zfz">
+        <dc:Bounds x="2120" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1eyy4eo_di" bpmnElement="feasibility_1ejnw1b">
+        <dc:Bounds x="700" y="477" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_152f78k_di" bpmnElement="Event_152f78k">
+        <dc:Bounds x="862" y="632" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0p8kjix_di" bpmnElement="Activity_1ismsxe">
+        <dc:Bounds x="410" y="477" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1gsgelv_di" bpmnElement="Activity_1srz6ze">
+        <dc:Bounds x="2660" y="162" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1t2kyjw_di" bpmnElement="Activity_0uk6dke">
+        <dc:Bounds x="700" y="610" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1dojlxp_di" bpmnElement="Event_1dojlxp">
+        <dc:Bounds x="3122" y="184" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3096" y="227" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1ylyits" bpmnElement="Activity_09e07sf">
+        <dc:Bounds x="2800" y="495" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0ade3hc" bpmnElement="Event_12cepm8">
+        <dc:Bounds x="3172" y="517" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3146" y="560" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_077c5qy" bpmnElement="Activity_0hm9819">
+        <dc:Bounds x="2370" y="852" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1jll4mb" bpmnElement="Event_0ukessa">
+        <dc:Bounds x="2752" y="874" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2726" y="917" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1j8mhgv_di" bpmnElement="Activity_1iqikmm">
+        <dc:Bounds x="1340" y="162" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1v69nkc_di" bpmnElement="Event_1v69nkc">
+        <dc:Bounds x="1782" y="184" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1755" y="227" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0ei8xi1" bpmnElement="Activity_0a726su">
+        <dc:Bounds x="2430" y="162" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0258pst_di" bpmnElement="Event_0oszh1l">
+        <dc:Bounds x="2132" y="517" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2105" y="560" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0vdcpni" bpmnElement="Activity_0drtowh">
+        <dc:Bounds x="2330" y="420" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_054f4zu" bpmnElement="Activity_1eotex4">
+        <dc:Bounds x="2620" y="495" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1vhkdfw_di" bpmnElement="Gateway_1vhkdfw">
+        <dc:Bounds x="1895" y="177" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0fyapg5_di" bpmnElement="Gateway_1iqap7y">
+        <dc:Bounds x="2285" y="177" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0krctm8_di" bpmnElement="Activity_0mow0q8">
+        <dc:Bounds x="2120" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0f0bora_di" bpmnElement="Gateway_0f0bora" isMarkerVisible="true">
+        <dc:Bounds x="1575" y="177" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0jkdclr_di" bpmnElement="Event_06s9r9h">
+        <dc:Bounds x="1462" y="80" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1464" y="123" width="32" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_19sc9g5" bpmnElement="Activity_1dda2yz">
+        <dc:Bounds x="1550" y="265" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1gck429" bpmnElement="Event_15q6iia">
+        <dc:Bounds x="1712" y="287" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_055yxwn" bpmnElement="Activity_01v0851">
+        <dc:Bounds x="1580" y="990" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1scxlw8" bpmnElement="Event_0a38sep">
+        <dc:Bounds x="1742" y="1012" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1ydn63i" bpmnElement="Activity_0eeqdxu" isExpanded="true">
+        <dc:Bounds x="1300" y="377" width="760" height="280" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1gpm78u" bpmnElement="Event_0sccz41">
+        <dc:Bounds x="1322" y="499" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0e03xxh" bpmnElement="Event_1ss76kn">
+        <dc:Bounds x="2002" y="499" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0l5gcyh" bpmnElement="Activity_1cuhvym">
+        <dc:Bounds x="1670" y="477" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1fvppej" bpmnElement="Activity_1n23h9u">
+        <dc:Bounds x="1860" y="477" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1h6spby" bpmnElement="Activity_164thiu">
+        <dc:Bounds x="1400" y="477" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1xuuvzs" bpmnElement="Gateway_1uvslef" isMarkerVisible="true">
+        <dc:Bounds x="1565" y="492" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1isgwy4" bpmnElement="Event_1if5he2">
+        <dc:Bounds x="1452" y="395" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1454" y="383" width="32" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1q1m7wq" bpmnElement="Activity_09eidzg">
+        <dc:Bounds x="1540" y="570" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0sbbeei" bpmnElement="Event_03q8ujt">
+        <dc:Bounds x="1702" y="592" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_0159unf" bpmnElement="Flow_1wmygez">
+        <di:waypoint x="1960" y="517" />
+        <di:waypoint x="2002" y="517" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1kwmivh" bpmnElement="Flow_0t4v4fj">
+        <di:waypoint x="1770" y="517" />
+        <di:waypoint x="1860" y="517" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1ak5dll" bpmnElement="Flow_19823yf">
+        <di:waypoint x="1500" y="517" />
+        <di:waypoint x="1565" y="517" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1ak6mj9" bpmnElement="Flow_0r9r5js">
+        <di:waypoint x="1358" y="517" />
+        <di:waypoint x="1400" y="517" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1wy1et2" bpmnElement="Flow_1fsagq8">
+        <di:waypoint x="1590" y="492" />
+        <di:waypoint x="1590" y="413" />
+        <di:waypoint x="1488" y="413" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0w9akp5_di" bpmnElement="Flow_0w9akp5">
+        <di:waypoint x="1615" y="517" />
+        <di:waypoint x="1670" y="517" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fx85do_di" bpmnElement="Flow_0fx85do">
+        <di:waypoint x="1470" y="431" />
+        <di:waypoint x="1470" y="454" />
+        <di:waypoint x="1450" y="454" />
+        <di:waypoint x="1450" y="477" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0x2rhvg" bpmnElement="Flow_0sq1ybt">
+        <di:waypoint x="1640" y="610" />
+        <di:waypoint x="1702" y="610" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1g2vgyd_di" bpmnElement="Flow_1g2vgyd">
+        <di:waypoint x="1590" y="542" />
+        <di:waypoint x="1590" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_02cqvei_di" bpmnElement="Gateway_0h91t5u">
+        <dc:Bounds x="2255" y="510" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1nromt8" bpmnElement="Activity_1he2hx0">
+        <dc:Bounds x="2330" y="560" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1wzfn1k" bpmnElement="Gateway_0exd21l">
+        <dc:Bounds x="2445" y="510" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1ux7erj" bpmnElement="Activity_1x3e6d9">
+        <dc:Bounds x="1370" y="852" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_14tftly" bpmnElement="Event_1lv0n7o">
+        <dc:Bounds x="2212" y="874" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2185" y="917" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0cyighx" bpmnElement="Gateway_1xbi9kc" isMarkerVisible="true">
+        <dc:Bounds x="1605" y="867" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0frn988" bpmnElement="Event_1y983ad">
+        <dc:Bounds x="1492" y="770" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1494" y="813" width="32" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0tingtu_di" bpmnElement="Activity_11b12y2">
+        <dc:Bounds x="2020" y="852" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1kaet3c" bpmnElement="Activity_0fsi77z">
+        <dc:Bounds x="1840" y="852" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_11rdlq5_di" bpmnElement="Event_0zgoqfm">
+        <dc:Bounds x="1742" y="874" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1729" y="917" width="62" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_00q9vw8" bpmnElement="Activity_0sny1nc">
+        <dc:Bounds x="1120" y="162" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_134u370" bpmnElement="Activity_187e8ze">
+        <dc:Bounds x="1120" y="477" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1p63yzy" bpmnElement="Activity_15ag4vq">
+        <dc:Bounds x="1150" y="852" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_170f6yk" bpmnElement="Activity_0xsxrm5">
+        <dc:Bounds x="2910" y="162" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1x842ci" bpmnElement="DataObjectReference_0v0v7xe">
+        <dc:Bounds x="2942" y="280" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2922" y="337" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1pnycti" bpmnElement="Activity_10u7818">
+        <dc:Bounds x="3010" y="495" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1aepxh0" bpmnElement="DataObjectReference_1hwecd1">
+        <dc:Bounds x="3042" y="613" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3022" y="670" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1ko1vsl" bpmnElement="Activity_096c0sf">
+        <dc:Bounds x="2560" y="852" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1we23xw" bpmnElement="DataObjectReference_0q6arzp">
+        <dc:Bounds x="2592" y="970" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2572" y="1027" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_07zmsoh_di" bpmnElement="Flow_07zmsoh">
+        <di:waypoint x="510" y="517" />
+        <di:waypoint x="565" y="517" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1afsppr_di" bpmnElement="Flow_1afsppr">
+        <di:waypoint x="615" y="517" />
+        <di:waypoint x="700" y="517" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="641" y="499" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1cockl4_di" bpmnElement="Flow_1cockl4">
+        <di:waypoint x="590" y="542" />
+        <di:waypoint x="590" y="650" />
+        <di:waypoint x="700" y="650" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="599" y="595" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dnz7bd_di" bpmnElement="Flow_1dnz7bd">
+        <di:waypoint x="188" y="517" />
+        <di:waypoint x="240" y="517" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17i3q85_di" bpmnElement="Flow_17i3q85">
+        <di:waypoint x="1040" y="492" />
+        <di:waypoint x="1040" y="202" />
+        <di:waypoint x="1120" y="202" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ybum8p_di" bpmnElement="Flow_0ybum8p">
+        <di:waypoint x="800" y="650" />
+        <di:waypoint x="862" y="650" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0t2jw03_di" bpmnElement="Flow_0t2jw03">
+        <di:waypoint x="2760" y="202" />
+        <di:waypoint x="2910" y="202" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0xmy0lg" bpmnElement="Flow_1001tam">
+        <di:waypoint x="2900" y="535" />
+        <di:waypoint x="3010" y="535" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1drnkf6_di" bpmnElement="Flow_1drnkf6">
+        <di:waypoint x="1945" y="202" />
+        <di:waypoint x="2028" y="202" />
+        <di:waypoint x="2028" y="120" />
+        <di:waypoint x="2120" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_144hnrn_di" bpmnElement="Flow_144hnrn">
+        <di:waypoint x="2530" y="202" />
+        <di:waypoint x="2660" y="202" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16h8lwt_di" bpmnElement="Flow_16h8lwt">
+        <di:waypoint x="2720" y="535" />
+        <di:waypoint x="2800" y="535" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xdim6s_di" bpmnElement="Flow_1xdim6s">
+        <di:waypoint x="1818" y="202" />
+        <di:waypoint x="1895" y="202" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f80zgq_di" bpmnElement="Flow_0f80zgq">
+        <di:waypoint x="1945" y="202" />
+        <di:waypoint x="2030" y="202" />
+        <di:waypoint x="2030" y="260" />
+        <di:waypoint x="2120" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14wjjom_di" bpmnElement="Flow_14wjjom">
+        <di:waypoint x="2220" y="120" />
+        <di:waypoint x="2310" y="120" />
+        <di:waypoint x="2310" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01jvw58_di" bpmnElement="Flow_01jvw58">
+        <di:waypoint x="2335" y="202" />
+        <di:waypoint x="2430" y="202" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1huq6hw_di" bpmnElement="Flow_1huq6hw">
+        <di:waypoint x="2220" y="260" />
+        <di:waypoint x="2310" y="260" />
+        <di:waypoint x="2310" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_058oefe_di" bpmnElement="Flow_058oefe">
+        <di:waypoint x="1440" y="202" />
+        <di:waypoint x="1575" y="202" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0hfpfgh_di" bpmnElement="Flow_0hfpfgh">
+        <di:waypoint x="1625" y="202" />
+        <di:waypoint x="1782" y="202" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ookt66_di" bpmnElement="Flow_0ookt66">
+        <di:waypoint x="1600" y="177" />
+        <di:waypoint x="1600" y="98" />
+        <di:waypoint x="1498" y="98" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0x2408f_di" bpmnElement="Flow_0x2408f">
+        <di:waypoint x="1462" y="98" />
+        <di:waypoint x="1390" y="98" />
+        <di:waypoint x="1390" y="162" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sq8gxg_di" bpmnElement="Flow_0sq8gxg">
+        <di:waypoint x="800" y="517" />
+        <di:waypoint x="1015" y="517" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09xj7v2_di" bpmnElement="Flow_09xj7v2">
+        <di:waypoint x="340" y="517" />
+        <di:waypoint x="410" y="517" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19dm0j7_di" bpmnElement="Flow_19dm0j7">
+        <di:waypoint x="1065" y="517" />
+        <di:waypoint x="1120" y="517" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0owtmjf_di" bpmnElement="Flow_0owtmjf">
+        <di:waypoint x="2060" y="535" />
+        <di:waypoint x="2132" y="535" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bw5ecs_di" bpmnElement="Flow_0bw5ecs">
+        <di:waypoint x="2168" y="535" />
+        <di:waypoint x="2255" y="535" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zk1pbj_di" bpmnElement="Flow_0zk1pbj">
+        <di:waypoint x="2280" y="510" />
+        <di:waypoint x="2280" y="460" />
+        <di:waypoint x="2330" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kifvmp_di" bpmnElement="Flow_1kifvmp">
+        <di:waypoint x="2280" y="560" />
+        <di:waypoint x="2280" y="600" />
+        <di:waypoint x="2330" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rm74xy_di" bpmnElement="Flow_0rm74xy">
+        <di:waypoint x="2430" y="460" />
+        <di:waypoint x="2470" y="460" />
+        <di:waypoint x="2470" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0iv9mt2_di" bpmnElement="Flow_0iv9mt2">
+        <di:waypoint x="2430" y="600" />
+        <di:waypoint x="2470" y="600" />
+        <di:waypoint x="2470" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dgxpay_di" bpmnElement="Flow_0dgxpay">
+        <di:waypoint x="2495" y="535" />
+        <di:waypoint x="2620" y="535" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0jf2yew" bpmnElement="Flow_0vn160v">
+        <di:waypoint x="1492" y="788" />
+        <di:waypoint x="1420" y="788" />
+        <di:waypoint x="1420" y="852" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1oh7fvs" bpmnElement="Flow_0ywfahv">
+        <di:waypoint x="1470" y="892" />
+        <di:waypoint x="1605" y="892" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1o23340" bpmnElement="Flow_0ps3kqv">
+        <di:waypoint x="1655" y="892" />
+        <di:waypoint x="1742" y="892" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0cqn8lm" bpmnElement="Flow_0hyrbbu">
+        <di:waypoint x="1630" y="867" />
+        <di:waypoint x="1630" y="788" />
+        <di:waypoint x="1528" y="788" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rqhqw0_di" bpmnElement="Flow_1rqhqw0">
+        <di:waypoint x="1040" y="542" />
+        <di:waypoint x="1040" y="892" />
+        <di:waypoint x="1150" y="892" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kvpfzx_di" bpmnElement="Flow_1kvpfzx">
+        <di:waypoint x="2248" y="892" />
+        <di:waypoint x="2370" y="892" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06njtdh_di" bpmnElement="Flow_06njtdh">
+        <di:waypoint x="1778" y="892" />
+        <di:waypoint x="1840" y="892" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1yrvkaa_di" bpmnElement="Flow_1yrvkaa">
+        <di:waypoint x="1940" y="892" />
+        <di:waypoint x="2020" y="892" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_004hiqr_di" bpmnElement="Flow_004hiqr">
+        <di:waypoint x="2120" y="892" />
+        <di:waypoint x="2212" y="892" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qyj50l_di" bpmnElement="Flow_1qyj50l">
+        <di:waypoint x="1220" y="202" />
+        <di:waypoint x="1340" y="202" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ctiq1c_di" bpmnElement="Flow_0ctiq1c">
+        <di:waypoint x="1250" y="892" />
+        <di:waypoint x="1370" y="892" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1z0vblj_di" bpmnElement="Flow_1z0vblj">
+        <di:waypoint x="1220" y="517" />
+        <di:waypoint x="1300" y="517" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0j4m176" bpmnElement="DataOutputAssociation_1c1u7qo">
+        <di:waypoint x="2960" y="242" />
+        <di:waypoint x="2960" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0llyaad_di" bpmnElement="Flow_0llyaad">
+        <di:waypoint x="3010" y="202" />
+        <di:waypoint x="3122" y="202" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_19j5kff" bpmnElement="DataOutputAssociation_0qe7ykv">
+        <di:waypoint x="3060" y="575" />
+        <di:waypoint x="3060" y="613" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wxk40i_di" bpmnElement="Flow_0wxk40i">
+        <di:waypoint x="3110" y="535" />
+        <di:waypoint x="3172" y="535" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0uaz0d2" bpmnElement="DataOutputAssociation_0mw4xr2">
+        <di:waypoint x="2610" y="932" />
+        <di:waypoint x="2610" y="970" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dtqhhh_di" bpmnElement="Flow_1dtqhhh">
+        <di:waypoint x="2470" y="892" />
+        <di:waypoint x="2560" y="892" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1c6rkms_di" bpmnElement="Flow_1c6rkms">
+        <di:waypoint x="2660" y="892" />
+        <di:waypoint x="2752" y="892" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0uqobhy" bpmnElement="Flow_0wszehh">
+        <di:waypoint x="1650" y="305" />
+        <di:waypoint x="1712" y="305" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q5s82l_di" bpmnElement="Flow_0q5s82l">
+        <di:waypoint x="1600" y="227" />
+        <di:waypoint x="1600" y="265" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_04iodu0" bpmnElement="Flow_1hvfriu">
+        <di:waypoint x="1680" y="1030" />
+        <di:waypoint x="1742" y="1030" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i3z0db_di" bpmnElement="Flow_1i3z0db">
+        <di:waypoint x="1630" y="917" />
+        <di:waypoint x="1630" y="990" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "9ac5ce59-10ad-4aa5-8342-74360457a35a",
+		"name": "Pedagogical Consultant",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33265345"
+	},
+	"item": [
+		{
+			"name": "serviceAcceptance",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9093/serviceAcceptance/7360",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9093",
+					"path": [
+						"serviceAcceptance",
+						"7360"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "serviceRequest",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"date\": \"2024-07-19\",\n  \"hours\": 4,\n  \"address\": \"via Roma, 43, Milano\",\n  \"additionalDetails\": \"Please be on time and bring toys for a 5-year-old.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9093/serviceRequest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9093",
+					"path": [
+						"serviceRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acceptPayment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 6000,\n  \"currency\": \"eur\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9093/acceptPayment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9093",
+					"path": [
+						"acceptPayment"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
