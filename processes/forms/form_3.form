@@ -1,0 +1,58 @@
+{
+  "components": [
+    {
+      "values": [
+        {
+          "label": "5",
+          "value": "value"
+        },
+        {
+          "label": "4",
+          "value": "value2"
+        },
+        {
+          "label": "3",
+          "value": "value3"
+        },
+        {
+          "label": "2",
+          "value": "value4"
+        },
+        {
+          "label": "1",
+          "value": "value5"
+        }
+      ],
+      "label": "How well did the babysitter interact with your child? (5=Perfect-1=Weak)",
+      "type": "radio",
+      "layout": {
+        "row": "Row_1n8ex52",
+        "columns": null
+      },
+      "id": "Field_1vfnhjv",
+      "key": "radio_3rqmm",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Any specific feedback about the babysitter’s interaction with your child?",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1ikhwwj",
+        "columns": null
+      },
+      "id": "Field_0xgg1wq",
+      "key": "textfield_yvinbt"
+    }
+  ],
+  "type": "default",
+  "id": "Finish_service_notice_babysitter",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "schemaVersion": 16
+}

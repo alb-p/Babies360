@@ -1,0 +1,53 @@
+{
+  "components": [
+    {
+      "values": [
+        {
+          "label": "Yes",
+          "value": "value"
+        },
+        {
+          "label": "No",
+          "value": "value2"
+        }
+      ],
+      "label": "Has the service been completed? ",
+      "type": "radio",
+      "layout": {
+        "row": "Row_1ugjxqm",
+        "columns": null
+      },
+      "id": "Field_0jhxejb",
+      "key": "radio_ke0ex"
+    },
+    {
+      "label": "Did you encounter any issues during the service? If yes, please describe the issue. ",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0f65ihi",
+        "columns": null
+      },
+      "id": "Field_1fv90gq",
+      "key": "textfield_vp4lyy"
+    },
+    {
+      "label": "Do you have any additional comments or feedback regarding the service?",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_1g4si9h",
+        "columns": null
+      },
+      "id": "Field_1jxbqqx",
+      "key": "textarea_en0m9f"
+    }
+  ],
+  "type": "default",
+  "id": "Service_done_confirmation",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.24.0"
+  },
+  "schemaVersion": 16
+}

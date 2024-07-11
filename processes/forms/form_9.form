@@ -1,0 +1,53 @@
+{
+  "components": [
+    {
+      "text": "# We hope everything went well!",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_07md580",
+        "columns": null
+      },
+      "id": "Field_1bzqp1j"
+    },
+    {
+      "text": "### Would you like to leave a feeback about the service? This is very  important  for us!",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_188t94d",
+        "columns": null
+      },
+      "id": "Field_004xy6p"
+    },
+    {
+      "label": "Text area",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_0m8v82u",
+        "columns": null
+      },
+      "id": "Field_0l5s190",
+      "key": "textarea_anttat"
+    },
+    {
+      "text": "## We hope to see you again!",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_0gohhi7",
+        "columns": null
+      },
+      "id": "Field_1xa8ncn"
+    }
+  ],
+  "type": "default",
+  "id": "feedback_form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "schemaVersion": 16
+}

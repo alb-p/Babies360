@@ -1,0 +1,185 @@
+{
+  "components": [
+    {
+      "text": "# Let us know what you need: we will help you! ",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_1qlcwna",
+        "columns": null
+      },
+      "id": "Field_1vrhagr"
+    },
+    {
+      "label": "Image view",
+      "type": "image",
+      "layout": {
+        "row": "Row_1qlcwna",
+        "columns": 5
+      },
+      "id": "Field_0jm7iv7",
+      "source": "https://raw.githubusercontent.com/alb-p/Babies360/main/resources/Babies360_logo.png?token=GHSAT0AAAAAACOTA4P6XD7LLREE27VBDTH4ZUP2YTA"
+    },
+    {
+      "label": "Name",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0grcx6t",
+        "columns": 7
+      },
+      "id": "Field_08cles2",
+      "key": "textfield_ks6tql",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Last Name",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0grcx6t",
+        "columns": 9
+      },
+      "id": "Field_0p3mzen",
+      "key": "textfield_15h0lo",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Email Address ",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1momws3",
+        "columns": 7
+      },
+      "id": "Field_1mzanq3",
+      "key": "textfield_qn04ni",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Phone Number",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1momws3",
+        "columns": null
+      },
+      "id": "Field_1ctg7e5",
+      "key": "textfield_v2r9g",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Address ",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1wjes5f",
+        "columns": null
+      },
+      "id": "Field_14ch33f",
+      "key": "address_form"
+    },
+    {
+      "values": [
+        {
+          "label": "Babysitter ",
+          "value": "1"
+        },
+        {
+          "label": "Party Organizer ",
+          "value": "2"
+        },
+        {
+          "label": "Pedagogical Consultation",
+          "value": "3"
+        }
+      ],
+      "label": "What kind of services do you require ?",
+      "type": "checklist",
+      "layout": {
+        "row": "Row_0e5xb31",
+        "columns": null
+      },
+      "id": "checklist_service",
+      "key": "checklist_service",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "subtype": "datetime",
+      "dateLabel": "Date",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_0zehc11",
+        "columns": 12
+      },
+      "id": "Field_0qomj29",
+      "key": "datetime_form",
+      "timeLabel": "Time",
+      "timeSerializingFormat": "utc_offset",
+      "timeInterval": 15,
+      "use24h": true
+    },
+    {
+      "label": "Hours",
+      "type": "number",
+      "layout": {
+        "row": "Row_0zehc11",
+        "columns": null
+      },
+      "id": "Field_15uwxcb",
+      "key": "service_hours",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "values": [
+        {
+          "label": "English",
+          "value": "1"
+        },
+        {
+          "label": "Italian",
+          "value": "2"
+        }
+      ],
+      "label": "Prefered  language:",
+      "type": "select",
+      "layout": {
+        "row": "Row_0zsey69",
+        "columns": null
+      },
+      "id": "Field_1cr4n1w",
+      "key": "select_te12r",
+      "validate": {
+        "required": true
+      },
+      "defaultValue": "2"
+    },
+    {
+      "label": "Please explain if you need more requirements:",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_1fbr50q",
+        "columns": null
+      },
+      "id": "Field_17eh5v2",
+      "key": "details_form"
+    }
+  ],
+  "type": "default",
+  "id": "service_request_form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "schemaVersion": 16
+}

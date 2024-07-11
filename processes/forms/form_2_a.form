@@ -1,0 +1,23 @@
+{
+  "components": [
+    {
+      "text": "# We are truly sorry but the Service you asked for is not available.",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_06fd6bp",
+        "columns": null
+      },
+      "id": "Field_017fh8r"
+    }
+  ],
+  "type": "default",
+  "id": "not_available_form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "schemaVersion": 16
+}

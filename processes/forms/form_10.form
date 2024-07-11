@@ -1,0 +1,33 @@
+{
+  "components": [
+    {
+      "text": "## We remind you the tomorow appointement for the pedagogical consult",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_0ehyrfw",
+        "columns": null
+      },
+      "id": "Field_0vt01ei"
+    },
+    {
+      "text": "The cost will be {{consultancy_fee}}€",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_068y478",
+        "columns": null
+      },
+      "id": "Field_0pb4us4"
+    }
+  ],
+  "type": "default",
+  "id": "consult_remainder_form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "schemaVersion": 16
+}

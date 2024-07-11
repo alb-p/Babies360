@@ -1,0 +1,63 @@
+{
+  "components": [
+    {
+      "values": [
+        {
+          "label": "Yes",
+          "value": "value"
+        },
+        {
+          "label": "No",
+          "value": "value2"
+        }
+      ],
+      "label": "Was the party organized according to your expectations?",
+      "type": "radio",
+      "layout": {
+        "row": "Row_0fuoxgb",
+        "columns": null
+      },
+      "id": "Field_19fhlgn",
+      "key": "radio_omuq9"
+    },
+    {
+      "values": [
+        {
+          "label": "Yes",
+          "value": "value"
+        },
+        {
+          "label": "No",
+          "value": "value2"
+        }
+      ],
+      "label": "Was the food and beverage service satisfactory? ",
+      "type": "radio",
+      "layout": {
+        "row": "Row_01wbiqh",
+        "columns": null
+      },
+      "id": "Field_16sav7i",
+      "key": "radio_yr2i9p"
+    },
+    {
+      "label": "Any specific feedback about the party organization?",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_1efxcaj",
+        "columns": null
+      },
+      "id": "Field_0st6lh1",
+      "key": "textarea_9h87m4"
+    }
+  ],
+  "type": "default",
+  "id": "Finish_service_notice_party_organizer",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.24.0"
+  },
+  "schemaVersion": 16
+}

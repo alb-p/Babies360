@@ -1,0 +1,184 @@
+{
+  "components": [
+    {
+      "text": "# Service fee is {{service_fee}} €",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_1b1t1iv",
+        "columns": null
+      },
+      "id": "Field_0dq930g"
+    },
+    {
+      "values": [
+        {
+          "label": "Credit Card",
+          "value": "1"
+        },
+        {
+          "label": "Debit Card",
+          "value": "2"
+        },
+        {
+          "label": "Bank Transfer",
+          "value": "3"
+        },
+        {
+          "label": "PayPal",
+          "value": "4"
+        }
+      ],
+      "label": "Please select your preferred payment method:",
+      "type": "select",
+      "layout": {
+        "row": "Row_0x81iay",
+        "columns": null
+      },
+      "id": "Field_1peqkrf",
+      "key": "pay_method"
+    },
+    {
+      "label": "Email address:",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_023poue",
+        "columns": null
+      },
+      "id": "Field_1amxm9k",
+      "key": "textfield_ktwm1i"
+    },
+    {
+      "label": "Cardholder Name:",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0ei49nh",
+        "columns": null
+      },
+      "id": "Field_1u3df2i",
+      "key": "textfield_s26pue",
+      "conditional": {
+        "hide": "=pay_method = \"4\""
+      }
+    },
+    {
+      "label": "Card Number:",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0ei49nh",
+        "columns": null
+      },
+      "id": "Field_161o3p4",
+      "key": "textfield_55prax",
+      "conditional": {
+        "hide": "=pay_method = \"4\""
+      }
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Expiry Date:",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_1o93v0c",
+        "columns": null
+      },
+      "id": "Field_1nqun8h",
+      "key": "datetime_pcidsm",
+      "conditional": {
+        "hide": "=pay_method = \"4\""
+      }
+    },
+    {
+      "label": "CVV:",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1o93v0c",
+        "columns": null
+      },
+      "id": "Field_1nqjnbp",
+      "key": "textfield_z42sul",
+      "conditional": {
+        "hide": "=pay_method = \"4\""
+      }
+    },
+    {
+      "label": "Billing Address: ",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0z7pja3",
+        "columns": null
+      },
+      "id": "Field_1kg7ur4",
+      "key": "textfield_gm2etg"
+    },
+    {
+      "label": "City:",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0z7pja3",
+        "columns": null
+      },
+      "id": "Field_0v0tieu",
+      "key": "textfield_ilbpzd"
+    },
+    {
+      "label": "State/Province:",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1o84bar",
+        "columns": null
+      },
+      "id": "Field_0czhc3o",
+      "key": "textfield_ede8h"
+    },
+    {
+      "label": "Zip/Postal Code:",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1o84bar",
+        "columns": null
+      },
+      "id": "Field_12roy6n",
+      "key": "textfield_ko9tqd"
+    },
+    {
+      "values": [
+        {
+          "label": "Value",
+          "value": "value"
+        }
+      ],
+      "label": "Country:",
+      "type": "select",
+      "layout": {
+        "row": "Row_1ikc4qd",
+        "columns": 8
+      },
+      "id": "Field_0ugatho",
+      "key": "select_fxqgv8"
+    },
+    {
+      "label": "I confirm that the above payment information is correct and authorize the payment. ",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_0p5e8gw",
+        "columns": null
+      },
+      "id": "Field_0sij7n9",
+      "key": "checkbox_uwfdqo",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "ask_for_payment",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "schemaVersion": 16
+}

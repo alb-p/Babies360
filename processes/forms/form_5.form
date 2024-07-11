@@ -1,0 +1,63 @@
+{
+  "components": [
+    {
+      "values": [
+        {
+          "label": "Yes",
+          "value": "value"
+        },
+        {
+          "label": "No",
+          "value": "value2"
+        }
+      ],
+      "label": "Was the consultation helpful and informative?",
+      "type": "radio",
+      "layout": {
+        "row": "Row_10mg01s",
+        "columns": null
+      },
+      "id": "Field_1rd9i8k",
+      "key": "radio_xe9d85"
+    },
+    {
+      "values": [
+        {
+          "label": "Yes",
+          "value": "value"
+        },
+        {
+          "label": "No",
+          "value": "value2"
+        }
+      ],
+      "label": "Did the consultant address all your concerns and questions?",
+      "type": "radio",
+      "layout": {
+        "row": "Row_1iwzx84",
+        "columns": null
+      },
+      "id": "Field_1x3wn22",
+      "key": "radio_gnlck"
+    },
+    {
+      "label": "Any specific feedback about the consultation session?",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_1jvk8kj",
+        "columns": null
+      },
+      "id": "Field_0ipc00d",
+      "key": "textarea_mq6rri"
+    }
+  ],
+  "type": "default",
+  "id": "Finish_service_notice_pedagogical",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.24.0"
+  },
+  "schemaVersion": 16
+}

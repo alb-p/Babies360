@@ -1,0 +1,100 @@
+{
+  "components": [
+    {
+      "label": "What type of party are you organizing?",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0rrg2fe",
+        "columns": null
+      },
+      "id": "Field_0psxyf9",
+      "key": "party_type",
+      "description": "Birthday, summer party, ..."
+    },
+    {
+      "label": "Do you have a specific theme for the party?",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1n0iskq",
+        "columns": null
+      },
+      "id": "Field_1ht6pa8",
+      "key": "theme"
+    },
+    {
+      "label": "Where will the party be held? (Address, Venue Name)",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_04v4i3q",
+        "columns": null
+      },
+      "id": "Field_1eef2ko",
+      "key": "venue"
+    },
+    {
+      "label": "How many children are you expecting?",
+      "type": "number",
+      "layout": {
+        "row": "Row_1l79wkr",
+        "columns": null
+      },
+      "id": "Field_0buosiw",
+      "key": "number_of_guests"
+    },
+    {
+      "values": [
+        {
+          "label": "Sandwiches",
+          "value": "sandwiches"
+        },
+        {
+          "label": "Fries",
+          "value": "Fries"
+        },
+        {
+          "label": "Pizza",
+          "value": "pizza"
+        },
+        {
+          "label": "Soft drinks",
+          "value": "Soft drinks"
+        },
+        {
+          "label": "Water",
+          "value": "Water"
+        },
+        {
+          "label": "Cake",
+          "value": "cake"
+        }
+      ],
+      "label": "What type of food and beverages will be served?",
+      "type": "checklist",
+      "layout": {
+        "row": "Row_1syij5m",
+        "columns": null
+      },
+      "id": "Field_10e3rzs",
+      "key": "food_and_bevarages"
+    },
+    {
+      "label": "Do you need any specific equipment or supplies? (e.g., Sound System, Lighting, Tables, Balloons, Chairs)",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_115krcs",
+        "columns": null
+      },
+      "id": "Field_1742hir",
+      "key": "equipment"
+    }
+  ],
+  "type": "default",
+  "id": "Party_deatils_form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "schemaVersion": 16
+}
