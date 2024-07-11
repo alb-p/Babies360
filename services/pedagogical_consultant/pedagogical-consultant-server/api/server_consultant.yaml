@@ -1,0 +1,121 @@
+openapi: "3.0.0"
+info:
+  description: "Pedagogical Consultant client"
+  version: "1.0.0"
+  title: "Pedagogical Consultant Service API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "alberto.papiri@mail.polimi.it"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  - url: http://api.consultant.com/v1
+    description: production server
+  - url: http://localhost:8080/
+    description: dev server
+
+paths:
+  /serviceRequest:
+    post:
+      summary: "Send job request to babysitter"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - date
+                - hours
+                - address
+              properties:
+                date:
+                  type: string
+                  description: "Date of the job"
+                  example: "2024-07-09"
+                hours:
+                  type: integer
+                  description: "Number of hours for the job"
+                  example: 4
+                address:
+                  type: string
+                  description: "Job address"
+                  example: "123 Main St, Springfield"
+                additionalDetails:
+                  type: string
+                  description: "Any additional details"
+                  example: "Please be on time and bring toys for a 5-year-old."
+      responses:
+        202:
+          description: "I will check my agenda and let you know if I can make it."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "5686"
+                  message:
+                    type: string
+        400:
+          description: "Invalid request"
+  /acceptPayment:
+    post:
+      summary: "Accept the payment for the service"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - currency
+              properties:
+                amount:
+                  type: integer
+                  description: "Amount of the payment (in cent)"
+                  example: 4000
+                currency:
+                  type: string
+                  description: "Payment currency"
+                  example: "eur"
+      responses:
+        200:
+          description: "Payment accepted"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: "Invalid request"
+  /serviceAcceptance/{id}:
+    get:
+      description: "Accept or refuse the service"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  acceptance:
+                    type: string
+                    example: "accepted"
+        400:
+          description: "Invalid status value"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
