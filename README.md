@@ -6,7 +6,10 @@ Babies360 is a service that give parents the possibility to ask for a variety of
 * Niloofar, Sasannia, 10888547
   
 ## Choreographed process
-This BPMN Choreography diagram represents a service coordination between Parents and the Babies360 company. At the beginning Parents making an initial service request to Babies360. The company then checks for availability; if the availability doesn't match the parent’s needs, the process will end. Once there's a match, Babies360 requests additional information from the Parents. After obtaining the needed details, Babies360 allocates the appropriate resources, like a babysitter, party organizer, or pedagogical consultant(they can be parallel). Following the service delivery, Babies360 manages the payment process and issues a payment notification to the Parents, concluding the transaction.
+
+This BPMN Choreography diagram represents service coordination between Parents, the Babies360 company, and the service providers. Initially, Parents make a service request to Babies360. The company checks for feasibility. If there's a match, Babies360 allocates the appropriate resources, such as a babysitter, party organizer, or pedagogical consultant. Following service delivery, Babies360 manages the payment process, issuing a payment notification to the Parents, paying the providers, and concluding the process by asking for feedback from the Parents.
+
+
 ![choreography diagram](processes/choreography.png?raw=true)
 
 ## Collaboration Diagram
