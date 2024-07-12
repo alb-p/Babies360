@@ -11,16 +11,6 @@
       "id": "Field_1vrhagr"
     },
     {
-      "label": "Image view",
-      "type": "image",
-      "layout": {
-        "row": "Row_1qlcwna",
-        "columns": 5
-      },
-      "id": "Field_0jm7iv7",
-      "source": "https://raw.githubusercontent.com/alb-p/Babies360/main/resources/Babies360_logo.png?token=GHSAT0AAAAAACOTA4P6XD7LLREE27VBDTH4ZUP2YTA"
-    },
-    {
       "label": "Name",
       "type": "textfield",
       "layout": {
