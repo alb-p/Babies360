@@ -1,6 +1,8 @@
 # Babies360
 Babies360 is a service that give parents the possibility to ask for a variety of services, such as babysitting, party organization and pedagogical consultation. The platform will collect all the needed details and the game is done!
 
+
+
 ## Members:
 * Alberto, Papiri, 10566115 
 * Niloofar, Sasannia, 10888547
@@ -36,3 +38,6 @@ This BPMN Choreography diagram represents service coordination between Parents, 
 - **Clients' servers**: navigate in each of *provider-server* folder and run `npm start`
 - **Camunda**: start the Camunda container
 - **BPMN excutable**: deploy all the components and start the main process. Make sure that the REST API outbound connectors have as URL your local device external IP (to find it run `if config` or similar tool)
+
+## Project Information
+The Babies360 project was developed for the Process and Service Design course at Politecnico di Milano in 2024 and has been evaluated with the highest score.
